@@ -4,7 +4,9 @@ import { getGenres, getProviders, getRegions } from "@/lib/tmdb/lists";
 vi.mock("@/lib/tmdb/http", () => ({ tmdbFetch: vi.fn(), REVALIDATE_LISTS: 86400 }));
 const fetchMock = vi.mocked(tmdbFetch);
 
-beforeEach(() => fetchMock.mockReset());
+beforeEach(() => {
+  fetchMock.mockReset();
+});
 
 it("getProviders busca provedores do país e ordena pela prioridade do país", async () => {
   fetchMock.mockResolvedValue({
