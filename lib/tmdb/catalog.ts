@@ -61,19 +61,27 @@ export async function discoverMovies(f: Filters, pagina: number): Promise<MovieP
   return toPage(data, await withProviders(data.results, f.pais));
 }
 
+export const SEARCH_PAGES_PER_REQUEST = 3;
+
+// A busca do TMDB não filtra por streaming: lê até 3 páginas seguidas para não devolver páginas vazias.
 export async function searchMovies(f: Filters, pagina: number): Promise<MoviePage> {
-  const data = await tmdbFetch<RawMovieList>(
-    "/search/movie",
-    { query: f.q, page: pagina, include_adult: "false" },
-    REVALIDATE_CONTENT,
-  );
-  const movies = (await withProviders(data.results, f.pais)).filter(
-    (m) =>
-      m.providers.length > 0 &&
-      (f.streamings.length === 0 || m.providers.some((p) => f.streamings.includes(p.id))) &&
-      (f.generos.length === 0 || m.genreIds.some((g) => f.generos.includes(g))),
-  );
-  return toPage(data, movies);
+  let current = pagina;
+  for (let read = 1; ; read++) {
+    const data = await tmdbFetch<RawMovieList>(
+      "/search/movie",
+      { query: f.q, page: current, include_adult: "false" },
+      REVALIDATE_CONTENT,
+    );
+    const movies = (await withProviders(data.results, f.pais)).filter(
+      (m) =>
+        m.providers.length > 0 &&
+        (f.streamings.length === 0 || m.providers.some((p) => f.streamings.includes(p.id))) &&
+        (f.generos.length === 0 || m.genreIds.some((g) => f.generos.includes(g))),
+    );
+    const page = toPage(data, movies);
+    if (movies.length > 0 || page.page >= page.totalPages || read === SEARCH_PAGES_PER_REQUEST) return page;
+    current = page.page + 1;
+  }
 }
 
 export function fetchCatalogPage(f: Filters, pagina: number): Promise<MoviePage> {

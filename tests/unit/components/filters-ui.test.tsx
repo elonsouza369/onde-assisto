@@ -111,3 +111,34 @@ it("SearchBox acompanha a busca da URL (ex.: Limpar filtros)", () => {
   rerender(<SearchBox filters={base} />);
   expect(screen.getByLabelText("Buscar filme")).toHaveValue("");
 });
+
+it("SearchBox não apaga o espaço final quando a URL volta aparada", () => {
+  vi.useFakeTimers();
+  const { rerender } = render(<SearchBox filters={base} />);
+  const input = screen.getByLabelText("Buscar filme");
+  fireEvent.change(input, { target: { value: "star " } });
+  act(() => vi.advanceTimersByTime(500));
+  expect(push).toHaveBeenLastCalledWith("/?q=star", { scroll: false });
+  rerender(<SearchBox filters={{ ...base, q: "star" }} />);
+  expect(input).toHaveValue("star ");
+});
+
+it("SearchBox mantém o que foi digitado enquanto a busca carregava", () => {
+  vi.useFakeTimers();
+  const { rerender } = render(<SearchBox filters={base} />);
+  const input = screen.getByLabelText("Buscar filme");
+  fireEvent.change(input, { target: { value: "bat" } });
+  act(() => vi.advanceTimersByTime(500));
+  fireEvent.change(input, { target: { value: "batman" } });
+  rerender(<SearchBox filters={{ ...base, q: "bat" }} />);
+  expect(input).toHaveValue("batman");
+});
+
+it("SearchBox usa os filtros atuais quando a espera termina", () => {
+  vi.useFakeTimers();
+  const { rerender } = render(<SearchBox filters={base} />);
+  fireEvent.change(screen.getByLabelText("Buscar filme"), { target: { value: "x" } });
+  rerender(<SearchBox filters={{ ...base, generos: [27] }} />);
+  act(() => vi.advanceTimersByTime(500));
+  expect(push).toHaveBeenLastCalledWith("/?genero=27&q=x", { scroll: false });
+});

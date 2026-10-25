@@ -40,7 +40,7 @@ export function MovieGrid({ initial, filters }: { initial: MoviePage; filters: F
     }
   }
 
-  if (initial.movies.length === 0) return <EmptyState pais={filters.pais} />;
+  if (initial.movies.length === 0 && initial.page >= initial.totalPages) return <EmptyState pais={filters.pais} />;
 
   return (
     <div>

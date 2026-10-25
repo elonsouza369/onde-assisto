@@ -79,6 +79,12 @@ describe("MovieGrid", () => {
     expect(screen.getByRole("button", { name: "Carregar mais" })).toBeInTheDocument();
   });
 
+  it("lista vazia com mais páginas oferece Carregar mais em vez de EmptyState", () => {
+    render(<MovieGrid filters={filters} initial={{ movies: [], page: 3, totalPages: 9 }} />);
+    expect(screen.queryByText("Nenhum filme encontrado com esses filtros.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Carregar mais" })).toBeInTheDocument();
+  });
+
   it("vazio mostra EmptyState", () => {
     render(<MovieGrid filters={{ ...filters, pais: "US" }} initial={{ movies: [], page: 1, totalPages: 0 }} />);
     expect(screen.getByText("Nenhum filme encontrado com esses filtros.")).toBeInTheDocument();

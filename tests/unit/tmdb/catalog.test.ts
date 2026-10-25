@@ -120,6 +120,40 @@ describe("searchMovies", () => {
   });
 });
 
+describe("searchMovies com páginas sem resultados", () => {
+  it("continua para a próxima página até achar resultados", async () => {
+    fetchMock.mockImplementation(async (path: string, params: Record<string, unknown>) => {
+      if (path.endsWith("/watch/providers")) {
+        return { results: { BR: { flatrate: path === "/movie/20/watch/providers" ? [netflix] : [] } } };
+      }
+      return params.page === 1
+        ? { page: 1, total_pages: 5, results: [raw(10)] }
+        : { page: 2, total_pages: 5, results: [raw(20)] };
+    });
+    const page = await searchMovies({ ...base, q: "x" }, 1);
+    expect(page).toMatchObject({ page: 2, totalPages: 5 });
+    expect(page.movies.map((m) => m.id)).toEqual([20]);
+  });
+
+  it("para depois de 3 páginas vazias", async () => {
+    fetchMock.mockImplementation(async (path: string, params: Record<string, unknown>) =>
+      path.endsWith("/watch/providers")
+        ? { results: {} }
+        : { page: params.page, total_pages: 50, results: [raw(Number(params.page))] },
+    );
+    const page = await searchMovies({ ...base, q: "x" }, 4);
+    expect(page).toMatchObject({ movies: [], page: 6, totalPages: 50 });
+    expect(fetchMock.mock.calls.filter(([p]) => p === "/search/movie")).toHaveLength(3);
+  });
+
+  it("para na última página", async () => {
+    route({ list: { results: [raw(1)], page: 1, total_pages: 1 } });
+    const page = await searchMovies({ ...base, q: "x" }, 1);
+    expect(page).toMatchObject({ movies: [], page: 1, totalPages: 1 });
+    expect(fetchMock.mock.calls.filter(([p]) => p === "/search/movie")).toHaveLength(1);
+  });
+});
+
 it("getMovieProviders devolve só flatrate do país", async () => {
   fetchMock.mockResolvedValue({ results: { BR: { flatrate: [netflix], rent: [prime] } } });
   expect((await getMovieProviders(5, "BR")).map((p) => p.id)).toEqual([8]);
