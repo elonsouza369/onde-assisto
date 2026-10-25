@@ -68,7 +68,7 @@ describe("discoverMovies", () => {
     await discoverMovies({ ...base, ordem }, 1);
     const params = fetchMock.mock.calls[0][1];
     expect(params).toMatchObject(expected);
-    if (ordem !== "nota") expect(params["vote_count.gte"]).toBeUndefined();
+    expect(params["vote_count.gte"]).toBeUndefined();
   });
 
   it("sem streamings e gêneros não envia esses filtros", async () => {

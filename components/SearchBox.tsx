@@ -8,6 +8,11 @@ const DEBOUNCE_MS = 500;
 
 export function SearchBox({ filters }: { filters: Filters }) {
   const [value, setValue] = useState(filters.q);
+  const [syncedQ, setSyncedQ] = useState(filters.q);
+  if (filters.q !== syncedQ) {
+    setSyncedQ(filters.q);
+    setValue(filters.q);
+  }
   const navigate = useFilterNavigation();
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -26,7 +31,7 @@ export function SearchBox({ filters }: { filters: Filters }) {
       onChange={(e) => handleChange(e.target.value)}
       placeholder="Buscar filme..."
       aria-label="Buscar filme"
-      className="w-full rounded bg-surface-2 px-3 py-2 text-sm placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-accent"
+      className="min-w-0 flex-1 rounded bg-surface-2 px-3 py-2 text-sm placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-accent"
     />
   );
 }

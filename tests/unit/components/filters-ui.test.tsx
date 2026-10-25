@@ -104,3 +104,10 @@ it("FilterBar desabilita ordenação na busca e mostra aviso", () => {
   expect(screen.getByLabelText("Ordenar por")).toBeDisabled();
   expect(screen.getByText("Mostrando resultados disponíveis em streaming em Brasil")).toBeInTheDocument();
 });
+
+it("SearchBox acompanha a busca da URL (ex.: Limpar filtros)", () => {
+  const { rerender } = render(<SearchBox filters={{ ...base, q: "duna" }} />);
+  expect(screen.getByLabelText("Buscar filme")).toHaveValue("duna");
+  rerender(<SearchBox filters={base} />);
+  expect(screen.getByLabelText("Buscar filme")).toHaveValue("");
+});

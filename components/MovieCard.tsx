@@ -31,7 +31,7 @@ export function MovieCard({ movie, pais }: { movie: Movie; pais: string }) {
         <span className="flex gap-1">
           {movie.providers.slice(0, 3).map((p) =>
             p.logoUrl ? (
-              <Image key={p.id} src={p.logoUrl} alt={p.name} title={p.name} width={20} height={20} className="rounded" />
+              <Image key={p.id} src={p.logoUrl} alt={p.name} title={p.name} width={20} height={20} className="h-5 w-5 rounded" />
             ) : null,
           )}
         </span>

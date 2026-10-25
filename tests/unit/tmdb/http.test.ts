@@ -62,7 +62,7 @@ it("lança TmdbNotFoundError em 404", async () => {
 
 it("lança TmdbError com status em 500", async () => {
   fetchMock.mockResolvedValue(json({}, 500));
-  const error = await tmdbFetch("/x", {}, 1).catch((e) => e);
+  const error = (await tmdbFetch("/x", {}, 1).catch((e) => e)) as TmdbError;
   expect(error).toBeInstanceOf(TmdbError);
   expect(error).not.toBeInstanceOf(TmdbNotFoundError);
   expect(error.status).toBe(500);

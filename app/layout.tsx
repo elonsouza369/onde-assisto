@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </Link>
         </header>
         {children}
+        <Footer />
       </body>
     </html>
   );
