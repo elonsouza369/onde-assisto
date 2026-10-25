@@ -1,0 +1,37 @@
+{
+  "id": 693134,
+  "title": "Duna: Parte Dois",
+  "original_title": "Dune: Part Two",
+  "release_date": "2024-02-27",
+  "runtime": 166,
+  "overview": "Paul Atreides se une a Chani e aos Fremen.",
+  "vote_average": 8.137,
+  "poster_path": "/poster.jpg",
+  "backdrop_path": "/backdrop.jpg",
+  "genres": [
+    { "id": 878, "name": "Ficção científica" },
+    { "id": 12, "name": "Aventura" }
+  ],
+  "watch/providers": {
+    "results": {
+      "BR": {
+        "link": "https://www.themoviedb.org/movie/693134-dune-part-two/watch?locale=BR",
+        "flatrate": [
+          { "provider_id": 1899, "provider_name": "Max", "logo_path": "/max.jpg", "display_priority": 5 },
+          { "provider_id": 119, "provider_name": "Amazon Prime Video", "logo_path": "/prime.jpg", "display_priority": 2 }
+        ],
+        "rent": [
+          { "provider_id": 2, "provider_name": "Apple TV", "logo_path": "/apple.jpg", "display_priority": 1 }
+        ]
+      }
+    }
+  },
+  "videos": {
+    "results": [
+      { "key": "teaser-en", "site": "YouTube", "type": "Teaser", "iso_639_1": "en" },
+      { "key": "vimeo-pt", "site": "Vimeo", "type": "Trailer", "iso_639_1": "pt" },
+      { "key": "trailer-en", "site": "YouTube", "type": "Trailer", "iso_639_1": "en" },
+      { "key": "trailer-pt", "site": "YouTube", "type": "Trailer", "iso_639_1": "pt" }
+    ]
+  }
+}
