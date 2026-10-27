@@ -27,6 +27,15 @@ function sortParams(ordem: SortOrder): Params {
 
 const orList = (ids: number[]) => (ids.length ? ids.join("|") : undefined);
 
+// Sem um mínimo de votos, "9+" se enche de filmes obscuros com meia dúzia de notas 10.
+const RATING_MIN_VOTES = 100;
+
+function ratingParams(f: Filters): Params {
+  if (!f.nota) return {};
+  const sortVotes = Number(sortParams(f.ordem)["vote_count.gte"] ?? 0);
+  return { "vote_average.gte": f.nota, "vote_count.gte": Math.max(RATING_MIN_VOTES, sortVotes) };
+}
+
 export async function getMovieProviders(id: number, pais: string): Promise<Provider[]> {
   const data = await tmdbFetch<RawWatchProviders>(`/movie/${id}/watch/providers`, {}, REVALIDATE_CONTENT);
   return mapProviders(data.results[pais]?.flatrate);
@@ -55,6 +64,7 @@ export async function discoverMovies(f: Filters, pagina: number): Promise<MovieP
       include_adult: "false",
       page: pagina,
       ...sortParams(f.ordem),
+      ...ratingParams(f),
     },
     REVALIDATE_CONTENT,
   );
@@ -76,7 +86,8 @@ export async function searchMovies(f: Filters, pagina: number): Promise<MoviePag
       (m) =>
         m.providers.length > 0 &&
         (f.streamings.length === 0 || m.providers.some((p) => f.streamings.includes(p.id))) &&
-        (f.generos.length === 0 || m.genreIds.some((g) => f.generos.includes(g))),
+        (f.generos.length === 0 || m.genreIds.some((g) => f.generos.includes(g))) &&
+        (!f.nota || m.rating >= f.nota),
     );
     const page = toPage(data, movies);
     if (movies.length > 0 || page.page >= page.totalPages || read === SEARCH_PAGES_PER_REQUEST) return page;

@@ -5,13 +5,13 @@ import { discoverMovies, fetchCatalogPage, getMovieProviders, searchMovies } fro
 vi.mock("@/lib/tmdb/http", () => ({ tmdbFetch: vi.fn(), REVALIDATE_CONTENT: 21600 }));
 const fetchMock = vi.mocked(tmdbFetch);
 
-const base: Filters = { pais: "BR", streamings: [], generos: [], ordem: "popularidade", q: "" };
+const base: Filters = { pais: "BR", streamings: [], generos: [], ordem: "popularidade", q: "", nota: null };
 
 const netflix = { provider_id: 8, provider_name: "Netflix", logo_path: "/n.jpg", display_priority: 1 };
 const prime = { provider_id: 119, provider_name: "Prime", logo_path: "/p.jpg", display_priority: 2 };
 
-function raw(id: number, genre_ids: number[] = [27]) {
-  return { id, title: `Filme ${id}`, release_date: "2024-01-01", poster_path: null, vote_average: 7, genre_ids };
+function raw(id: number, genre_ids: number[] = [27], vote_average = 7) {
+  return { id, title: `Filme ${id}`, release_date: "2024-01-01", poster_path: null, vote_average, genre_ids };
 }
 
 type Routes = {
@@ -71,12 +71,25 @@ describe("discoverMovies", () => {
     expect(params["vote_count.gte"]).toBeUndefined();
   });
 
+  it("nota mínima exige a nota e pelo menos 100 votos", async () => {
+    route({ list: { results: [] } });
+    await discoverMovies({ ...base, nota: 8 }, 1);
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({ "vote_average.gte": 8, "vote_count.gte": 100 });
+  });
+
+  it("nota mínima não afrouxa os 200 votos da ordem por nota", async () => {
+    route({ list: { results: [] } });
+    await discoverMovies({ ...base, ordem: "nota", nota: 9 }, 1);
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({ "vote_average.gte": 9, "vote_count.gte": 200 });
+  });
+
   it("sem streamings e gêneros não envia esses filtros", async () => {
     route({ list: { results: [] } });
     await discoverMovies(base, 1);
     const params = fetchMock.mock.calls[0][1];
     expect(params.with_watch_providers).toBeUndefined();
     expect(params.with_genres).toBeUndefined();
+    expect(params["vote_average.gte"]).toBeUndefined();
   });
 
   it("anexa provedores de cada filme e tolera falha individual", async () => {
@@ -117,6 +130,17 @@ describe("searchMovies", () => {
     });
     const page = await searchMovies({ ...base, q: "x", streamings: [8, 119], generos: [27, 35] }, 1);
     expect(page.movies.map((m) => m.id)).toEqual([1, 2]);
+  });
+});
+
+describe("searchMovies com nota mínima", () => {
+  it("mantém só filmes com nota igual ou acima", async () => {
+    route({
+      list: { results: [raw(1, [27], 7.9), raw(2, [27], 8), raw(3, [27], 9.2)] },
+      providers: { 1: [netflix], 2: [netflix], 3: [netflix] },
+    });
+    const page = await searchMovies({ ...base, q: "x", nota: 8 }, 1);
+    expect(page.movies.map((m) => m.id)).toEqual([2, 3]);
   });
 });
 

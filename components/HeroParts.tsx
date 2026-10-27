@@ -6,9 +6,9 @@ export function formatRuntime(minutes: number): string {
   return h > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${m}min`;
 }
 
-/** Nota do TMDB (0–10) mostrada como porcentagem, no espírito do "97% Match". */
-export function approval(rating: number): string {
-  return `${Math.round(rating * 10)}%`;
+/** Nota do TMDB (0–10) no formato brasileiro, a mesma escala dos atalhos 7+, 8+ e 9+. */
+export function formatRating(rating: number): string {
+  return `★ ${rating.toFixed(1).replace(".", ",")}`;
 }
 
 export function HeroBackdrop({ src }: { src: string | null }) {
@@ -45,7 +45,7 @@ type MetaProps = { rating: number; year: number | null; runtime?: number | null 
 export function MovieMeta({ rating, year, runtime }: MetaProps) {
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-base sm:text-lg">
-      {rating > 0 && <span className="font-bold text-match">{approval(rating)} aprovação</span>}
+      {rating > 0 && <span className="font-bold text-match">{formatRating(rating)}</span>}
       {year && <span className="text-white/85">{year}</span>}
       {runtime ? (
         <span className="rounded-sm bg-white/20 px-2 py-0.5 text-sm font-semibold text-white/90">

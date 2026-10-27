@@ -1,11 +1,15 @@
 export type SortOrder = "popularidade" | "nota" | "lancamento" | "titulo";
 
+export type RatingMin = 7 | 8 | 9;
+export const RATING_MINS: RatingMin[] = [7, 8, 9];
+
 export type Filters = {
   pais: string;
   streamings: number[];
   generos: number[];
   ordem: SortOrder;
   q: string;
+  nota: RatingMin | null;
 };
 
 export const DEFAULT_COUNTRY = "BR";
@@ -34,6 +38,10 @@ function parseCountry(value: string, validCountries?: string[]): string {
   return code;
 }
 
+function parseRating(value: string): RatingMin | null {
+  return RATING_MINS.find((n) => String(n) === value) ?? null;
+}
+
 export function parseFilters(params: RawParams, validCountries?: string[]): Filters {
   const ordem = first(params.ordem) as SortOrder;
   return {
@@ -42,6 +50,7 @@ export function parseFilters(params: RawParams, validCountries?: string[]): Filt
     generos: parseIds(first(params.genero)),
     ordem: SORT_ORDERS.includes(ordem) ? ordem : DEFAULT_ORDER,
     q: first(params.q).trim(),
+    nota: parseRating(first(params.nota)),
   };
 }
 
@@ -52,6 +61,7 @@ export function filtersToSearchParams(f: Filters, extra?: { pagina?: number }): 
   if (f.generos.length) params.set("genero", f.generos.join(","));
   if (f.ordem !== DEFAULT_ORDER) params.set("ordem", f.ordem);
   if (f.q.trim()) params.set("q", f.q.trim());
+  if (f.nota) params.set("nota", String(f.nota));
   if (extra?.pagina) params.set("pagina", String(extra.pagina));
   return params;
 }

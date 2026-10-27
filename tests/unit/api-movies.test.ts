@@ -27,7 +27,7 @@ it("devolve a página pedida com os filtros da URL", async () => {
   expect(response.status).toBe(200);
   expect(await response.json()).toEqual(page);
   expect(catalogMock).toHaveBeenCalledWith(
-    { pais: "US", streamings: [8], generos: [], ordem: "popularidade", q: "" },
+    { pais: "US", streamings: [8], generos: [], ordem: "popularidade", q: "", nota: null },
     2,
   );
 });

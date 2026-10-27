@@ -5,6 +5,7 @@ import type { Genre, Provider } from "@/lib/tmdb/types";
 import { useFilterNavigation } from "@/lib/useFilterNavigation";
 import { GenreFilter } from "./GenreFilter";
 import { ProviderFilter } from "./ProviderFilter";
+import { RatingFilter } from "./RatingFilter";
 import { SortSelect } from "./SortSelect";
 
 type Props = { filters: Filters; providers: Provider[]; genres: Genre[]; countryName: string };
@@ -23,6 +24,7 @@ export function FilterBar({ filters, providers, genres, countryName }: Props) {
       <GenreFilter genres={genres} selected={filters.generos} onChange={(generos) => navigate({ ...filters, generos })} />
       <div className="flex flex-wrap items-center gap-3">
         <SortSelect value={filters.ordem} disabled={searching} onChange={(ordem) => navigate({ ...filters, ordem })} />
+        <RatingFilter value={filters.nota} onChange={(nota) => navigate({ ...filters, nota })} />
         {searching && (
           <p className="text-sm text-muted">Mostrando resultados disponíveis em streaming em {countryName}</p>
         )}

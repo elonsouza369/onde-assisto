@@ -3,6 +3,7 @@ import { CountrySelect } from "@/components/CountrySelect";
 import { FilterBar } from "@/components/FilterBar";
 import { GenreFilter } from "@/components/GenreFilter";
 import { ProviderFilter } from "@/components/ProviderFilter";
+import { RatingFilter } from "@/components/RatingFilter";
 import { SearchBox } from "@/components/SearchBox";
 import { SortSelect } from "@/components/SortSelect";
 import type { Filters } from "@/lib/filters";
@@ -10,7 +11,7 @@ import type { Filters } from "@/lib/filters";
 const push = vi.fn();
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 
-const base: Filters = { pais: "BR", streamings: [], generos: [], ordem: "popularidade", q: "" };
+const base: Filters = { pais: "BR", streamings: [], generos: [], ordem: "popularidade", q: "", nota: null };
 const providers = [
   { id: 8, name: "Netflix", logoUrl: "https://x/n.jpg" },
   { id: 119, name: "Prime Video", logoUrl: null },
@@ -77,6 +78,28 @@ it("GenreFilter alterna seleção", () => {
   expect(screen.getByRole("button", { name: "Terror" })).toHaveAttribute("aria-pressed", "true");
   fireEvent.click(screen.getByRole("button", { name: "Comédia" }));
   expect(onChange).toHaveBeenLastCalledWith([27, 35]);
+});
+
+it("RatingFilter escolhe, troca e desliga a nota mínima", () => {
+  const onChange = vi.fn();
+  const { rerender } = render(<RatingFilter value={null} onChange={onChange} />);
+  expect(screen.getAllByRole("button").map((b) => b.textContent)).toEqual(["7+", "8+", "9+"]);
+  fireEvent.click(screen.getByRole("button", { name: "Nota 8 ou mais" }));
+  expect(onChange).toHaveBeenLastCalledWith(8);
+
+  rerender(<RatingFilter value={8} onChange={onChange} />);
+  expect(screen.getByRole("button", { name: "Nota 8 ou mais" })).toHaveAttribute("aria-pressed", "true");
+  expect(screen.getByRole("button", { name: "Nota 9 ou mais" })).toHaveAttribute("aria-pressed", "false");
+  fireEvent.click(screen.getByRole("button", { name: "Nota 9 ou mais" }));
+  expect(onChange).toHaveBeenLastCalledWith(9);
+  fireEvent.click(screen.getByRole("button", { name: "Nota 8 ou mais" }));
+  expect(onChange).toHaveBeenLastCalledWith(null);
+});
+
+it("FilterBar navega ao escolher nota", () => {
+  render(<FilterBar filters={{ ...base, generos: [27] }} providers={providers} genres={genres} countryName="Brasil" />);
+  fireEvent.click(screen.getByRole("button", { name: "Nota 8 ou mais" }));
+  expect(push).toHaveBeenCalledWith("/?genero=27&nota=8", { scroll: false });
 });
 
 it("SortSelect oferece as quatro ordens", () => {

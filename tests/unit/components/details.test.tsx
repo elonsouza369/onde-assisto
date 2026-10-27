@@ -27,7 +27,7 @@ it("MovieHero mostra dados e duração formatada", () => {
   expect(screen.getByRole("heading", { name: "Duna: Parte Dois" })).toBeInTheDocument();
   expect(screen.getByText("2024")).toBeInTheDocument();
   expect(screen.getByText("2h46")).toBeInTheDocument();
-  expect(screen.getByText("81% aprovação")).toBeInTheDocument();
+  expect(screen.getByText("★ 8,1")).toBeInTheDocument();
   expect(screen.getByText("Ficção científica")).toBeInTheDocument();
   expect(screen.getByText("Paul Atreides se une aos Fremen.")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "Ver trailer" })).toBeInTheDocument();

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Movie } from "@/lib/tmdb/types";
-import { approval } from "./HeroParts";
+import { formatRating } from "./HeroParts";
 
 export function MovieCard({ movie, pais }: { movie: Movie; pais: string }) {
   return (
@@ -42,7 +42,7 @@ export function MovieCard({ movie, pais }: { movie: Movie; pais: string }) {
         {movie.title}
       </h3>
       <p className="mt-0.5 flex gap-2 text-xs text-muted">
-        {movie.rating > 0 && <span className="font-bold text-match">{approval(movie.rating)}</span>}
+        {movie.rating > 0 && <span className="font-bold text-match">{formatRating(movie.rating)}</span>}
         {movie.year && <span>{movie.year}</span>}
       </p>
     </Link>
