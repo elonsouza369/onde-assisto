@@ -42,10 +42,16 @@ export default async function MoviePage({ params, searchParams }: Props) {
   return (
     <main className="flex-1">
       <MovieHero movie={movie} />
-      <div className="flex flex-col gap-6 px-4 pt-6 sm:px-8">
+      <div className="flex flex-col gap-10 px-4 pt-4 sm:px-12">
         <WatchProviders providers={movie.providers} watchLink={movie.watchLink} countryName={countryName} />
-        <Link href={pais === DEFAULT_COUNTRY ? "/" : `/?pais=${pais}`} className="text-sm text-neutral-400 hover:text-white">
-          ← Voltar
+        <Link
+          href={pais === DEFAULT_COUNTRY ? "/" : `/?pais=${pais}`}
+          className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-muted hover:text-white"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current stroke-2">
+            <path d="M15 5 8 12l7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Voltar ao catálogo
         </Link>
       </div>
     </main>

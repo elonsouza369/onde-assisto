@@ -11,7 +11,7 @@ export function CountrySelect({ filters, regions }: { filters: Filters; regions:
       aria-label="País"
       value={filters.pais}
       onChange={(e) => navigate(withCountry(filters, e.target.value))}
-      className="w-36 shrink-0 sm:w-56 rounded bg-surface-2 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+      className="w-36 shrink-0 sm:w-56 rounded-sm border border-white/25 bg-black/60 px-3 py-2.5 text-sm backdrop-blur-md transition-colors hover:border-white/50 focus:border-white focus:outline-none"
     >
       {regions.map((r) => (
         <option key={r.code} value={r.code}>

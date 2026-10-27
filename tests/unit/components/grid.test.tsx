@@ -36,7 +36,7 @@ describe("MovieCard", () => {
     );
     expect(screen.getByText("Duna")).toBeInTheDocument();
     expect(screen.getByText("2024")).toBeInTheDocument();
-    expect(screen.getByText("★ 8.1")).toBeInTheDocument();
+    expect(screen.getByText("81%")).toBeInTheDocument();
     expect(screen.getByAltText("Netflix")).toBeInTheDocument();
     expect(screen.getByRole("link")).toHaveAttribute("href", "/filme/1?pais=BR");
   });
@@ -44,7 +44,7 @@ describe("MovieCard", () => {
   it("sem pôster, sem ano e sem nota não quebra", () => {
     const { container } = render(<MovieCard pais="US" movie={movie(2, { year: null, rating: 0 })} />);
     expect(screen.getAllByText("Filme 2").length).toBeGreaterThan(0);
-    expect(container.textContent).not.toMatch(/null|NaN|undefined|★/);
+    expect(container.textContent).not.toMatch(/null|NaN|undefined|%/);
   });
 
   it("mostra no máximo 3 logos", () => {

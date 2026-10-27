@@ -16,7 +16,7 @@ export function SortSelect({ value, disabled, onChange }: Props) {
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value as SortOrder)}
-      className="rounded bg-surface-2 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50"
+      className="rounded-sm border border-white/25 bg-black/60 px-3 py-2.5 text-sm backdrop-blur-md transition-colors hover:border-white/50 focus:border-white focus:outline-none disabled:opacity-40"
     >
       {OPTIONS.map((o) => (
         <option key={o.value} value={o.value}>

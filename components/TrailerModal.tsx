@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PlayIcon } from "./HeroParts";
 
 export function TrailerModal({ trailerKey }: { trailerKey: string }) {
   const [open, setOpen] = useState(false);
@@ -19,9 +20,10 @@ export function TrailerModal({ trailerKey }: { trailerKey: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded bg-accent px-5 py-2 font-semibold hover:brightness-110"
+        className="inline-flex items-center gap-2.5 rounded-sm bg-white px-7 py-2.5 text-lg font-bold text-black transition-colors hover:bg-white/80"
       >
-        ▶ Ver trailer
+        <PlayIcon className="h-6 w-6" />
+        Ver trailer
       </button>
       {open && (
         <div
@@ -29,11 +31,18 @@ export function TrailerModal({ trailerKey }: { trailerKey: string }) {
           aria-modal="true"
           aria-label="Trailer"
           onClick={(e) => e.target === e.currentTarget && setOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
         >
-          <div className="w-full max-w-4xl">
-            <div className="mb-2 flex justify-end">
-              <button type="button" onClick={() => setOpen(false)} className="text-sm text-neutral-300 hover:text-white">
+          <div className="w-full max-w-5xl">
+            <div className="mb-3 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 hover:text-white"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 stroke-current stroke-2">
+                  <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+                </svg>
                 Fechar
               </button>
             </div>
@@ -42,7 +51,7 @@ export function TrailerModal({ trailerKey }: { trailerKey: string }) {
               src={`https://www.youtube-nocookie.com/embed/${trailerKey}?autoplay=1`}
               allow="autoplay; encrypted-media; picture-in-picture"
               allowFullScreen
-              className="aspect-video w-full rounded"
+              className="aspect-video w-full rounded-sm shadow-[0_0_80px_rgba(229,9,20,0.25)]"
             />
           </div>
         </div>

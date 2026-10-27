@@ -25,11 +25,12 @@ const details: MovieDetails = {
 it("MovieHero mostra dados e duração formatada", () => {
   render(<MovieHero movie={details} />);
   expect(screen.getByRole("heading", { name: "Duna: Parte Dois" })).toBeInTheDocument();
-  expect(screen.getByText("2024 · 2h46")).toBeInTheDocument();
-  expect(screen.getByText("★ 8.1")).toBeInTheDocument();
+  expect(screen.getByText("2024")).toBeInTheDocument();
+  expect(screen.getByText("2h46")).toBeInTheDocument();
+  expect(screen.getByText("81% aprovação")).toBeInTheDocument();
   expect(screen.getByText("Ficção científica")).toBeInTheDocument();
   expect(screen.getByText("Paul Atreides se une aos Fremen.")).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "▶ Ver trailer" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Ver trailer" })).toBeInTheDocument();
 });
 
 it("MovieHero sem backdrop, runtime, ano e trailer", () => {
@@ -37,7 +38,7 @@ it("MovieHero sem backdrop, runtime, ano e trailer", () => {
     <MovieHero movie={{ ...details, backdropUrl: null, runtime: null, year: null, trailerKey: null, posterUrl: null }} />,
   );
   expect(container.textContent).not.toMatch(/null|NaN|undefined/);
-  expect(screen.queryByRole("button", { name: "▶ Ver trailer" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Ver trailer" })).not.toBeInTheDocument();
 });
 
 it("MovieHero mostra só a duração quando não há ano", () => {
@@ -47,7 +48,7 @@ it("MovieHero mostra só a duração quando não há ano", () => {
 
 it("TrailerModal abre e fecha com Esc, botão e clique fora", () => {
   render(<TrailerModal trailerKey="abc" />);
-  const open = () => fireEvent.click(screen.getByRole("button", { name: "▶ Ver trailer" }));
+  const open = () => fireEvent.click(screen.getByRole("button", { name: "Ver trailer" }));
   const frame = () => screen.queryByTitle("Trailer");
 
   open();

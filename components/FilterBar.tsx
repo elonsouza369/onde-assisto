@@ -14,7 +14,7 @@ export function FilterBar({ filters, providers, genres, countryName }: Props) {
   const searching = isSearch(filters);
 
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-4">
       <ProviderFilter
         providers={providers}
         selected={filters.streamings}
@@ -24,7 +24,7 @@ export function FilterBar({ filters, providers, genres, countryName }: Props) {
       <div className="flex flex-wrap items-center gap-3">
         <SortSelect value={filters.ordem} disabled={searching} onChange={(ordem) => navigate({ ...filters, ordem })} />
         {searching && (
-          <p className="text-sm text-neutral-400">Mostrando resultados disponíveis em streaming em {countryName}</p>
+          <p className="text-sm text-muted">Mostrando resultados disponíveis em streaming em {countryName}</p>
         )}
       </div>
     </section>

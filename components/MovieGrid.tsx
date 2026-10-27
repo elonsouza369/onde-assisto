@@ -8,7 +8,7 @@ import { ErrorState } from "./ErrorState";
 import { MovieCard } from "./MovieCard";
 
 export const GRID_CLASSES =
-  "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6";
+  "grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7";
 
 function mergeUnique(current: Movie[], next: Movie[]): Movie[] {
   const seen = new Set(current.map((m) => m.id));
@@ -53,12 +53,12 @@ export function MovieGrid({ initial, filters }: { initial: MoviePage; filters: F
         <ErrorState onRetry={loadMore} />
       ) : (
         page < totalPages && (
-          <div className="flex justify-center py-8">
+          <div className="flex justify-center pt-12">
             <button
               type="button"
               onClick={loadMore}
               disabled={loading}
-              className="rounded bg-surface-2 px-6 py-2 font-semibold hover:bg-accent disabled:opacity-60"
+              className="rounded-sm border border-white/30 px-8 py-2.5 font-semibold transition-colors hover:border-white hover:bg-white hover:text-black disabled:opacity-60"
             >
               {loading ? "Carregando..." : "Carregar mais"}
             </button>

@@ -9,7 +9,7 @@ export function toggle(ids: number[], id: number): number[] {
 
 export function ProviderFilter({ providers, selected, onChange }: Props) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-2">
+    <div className="-mx-1 flex gap-3 overflow-x-auto px-1 py-1.5">
       {providers.map((p) => {
         const active = selected.includes(p.id);
         return (
@@ -20,14 +20,16 @@ export function ProviderFilter({ providers, selected, onChange }: Props) {
             aria-pressed={active}
             title={p.name}
             onClick={() => onChange(toggle(selected, p.id))}
-            className={`shrink-0 overflow-hidden rounded-lg border-2 ${
-              active ? "border-accent" : "border-transparent opacity-70 hover:opacity-100"
+            className={`shrink-0 overflow-hidden rounded-md transition duration-200 ${
+              active
+                ? "ring-[3px] ring-white ring-offset-2 ring-offset-black"
+                : "opacity-55 grayscale-[35%] hover:opacity-100 hover:grayscale-0"
             }`}
           >
             {p.logoUrl ? (
-              <Image src={p.logoUrl} alt="" width={44} height={44} />
+              <Image src={p.logoUrl} alt="" width={48} height={48} className="h-12 w-12" />
             ) : (
-              <span className="flex h-11 w-11 items-center justify-center bg-surface-2 text-[10px]">{p.name}</span>
+              <span className="flex h-12 w-12 items-center justify-center bg-surface-2 text-[10px] leading-tight">{p.name}</span>
             )}
           </button>
         );
