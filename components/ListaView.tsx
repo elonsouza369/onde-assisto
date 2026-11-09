@@ -21,6 +21,8 @@ export async function ListaView({ aba, pais }: { aba: Aba; pais: string }) {
         </span>
       </h1>
       <MovieGrid
+        // Recria a grade ao trocar de aba, de país ou quando a lista muda; senão ela mostraria os filmes antigos.
+        key={`${aba}-${pais}-${pagina.total}`}
         initial={pagina}
         endpoint={`/api/lista?aba=${aba}&pais=${pais}`}
         pais={pais}

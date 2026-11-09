@@ -40,3 +40,11 @@ it.each([
   expect(screen.getByText(mensagem)).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "Explorar catálogo" })).toHaveAttribute("href", "/");
 });
+
+it("trocar de aba mostra os filmes da nova aba, não os da anterior", async () => {
+  listaMock.mockResolvedValueOnce({ movies: [], page: 1, totalPages: 1, total: 0 });
+  const { rerender } = render(await ListaView({ aba: "quero-assistir", pais: "BR" }));
+  listaMock.mockResolvedValueOnce({ movies: [movie(7)], page: 1, totalPages: 1, total: 1 });
+  rerender(await ListaView({ aba: "assistidos", pais: "BR" }));
+  expect(screen.getByRole("heading", { name: "Filme 7" })).toBeInTheDocument();
+});
