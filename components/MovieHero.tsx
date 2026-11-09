@@ -1,8 +1,9 @@
+import type { ReactNode } from "react";
 import type { MovieDetails } from "@/lib/tmdb/types";
 import { HeroBackdrop, HeroTitle, MovieMeta } from "./HeroParts";
 import { TrailerModal } from "./TrailerModal";
 
-export function MovieHero({ movie }: { movie: MovieDetails }) {
+export function MovieHero({ movie, acoes }: { movie: MovieDetails; acoes?: ReactNode }) {
   return (
     <section className="relative isolate flex min-h-[78svh] items-end md:min-h-[92svh]">
       <HeroBackdrop src={movie.backdropUrl} />
@@ -21,9 +22,10 @@ export function MovieHero({ movie }: { movie: MovieDetails }) {
         {movie.overview && (
           <p className="max-w-[58ch] text-base leading-relaxed text-white/85 sm:text-lg">{movie.overview}</p>
         )}
-        {movie.trailerKey && (
-          <div className="pt-2">
-            <TrailerModal trailerKey={movie.trailerKey} />
+        {(movie.trailerKey || acoes) && (
+          <div className="flex flex-wrap items-start gap-3 pt-2">
+            {movie.trailerKey && <TrailerModal trailerKey={movie.trailerKey} />}
+            {acoes}
           </div>
         )}
       </div>

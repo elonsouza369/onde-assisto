@@ -1,10 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Marca } from "@/lib/marcas";
 import type { MovieDetails } from "@/lib/tmdb/types";
 import { HeroBackdrop, HeroTitle, MovieMeta } from "./HeroParts";
+import { MarkButtons } from "./MarkButtons";
 import { TrailerModal } from "./TrailerModal";
 
-export function FeaturedHero({ movie, pais }: { movie: MovieDetails; pais: string }) {
+type Props = { movie: MovieDetails; pais: string; marca: Marca | null };
+
+export function FeaturedHero({ movie, pais, marca }: Props) {
   const providers = movie.providers.slice(0, 3);
 
   return (
@@ -40,6 +44,7 @@ export function FeaturedHero({ movie, pais }: { movie: MovieDetails; pais: strin
             </svg>
             Mais informações
           </Link>
+          <MarkButtons filmeId={movie.id} marca={marca} />
         </div>
       </div>
     </section>
