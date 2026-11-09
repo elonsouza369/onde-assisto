@@ -1,10 +1,14 @@
+import { redirect } from "next/navigation";
 import { CountrySelect } from "@/components/CountrySelect";
 import { FeaturedHero } from "@/components/FeaturedHero";
 import { FilterBar } from "@/components/FilterBar";
+import { ListaView } from "@/components/ListaView";
 import { MovieGrid } from "@/components/MovieGrid";
 import { SearchBox } from "@/components/SearchBox";
 import { filtersToSearchParams, isSearch, parseFilters, type Filters, type SortOrder } from "@/lib/filters";
 import { getMarcas } from "@/lib/listas";
+import { parseAba } from "@/lib/marcas";
+import { getUsuario } from "@/lib/supabase/auth";
 import { fetchCatalogPage, getGenres, getMovieDetails, getProviders, getRegions } from "@/lib/tmdb";
 
 const ROW_TITLES: Record<SortOrder, string> = {
@@ -19,11 +23,24 @@ function rowTitle(filters: Filters): string {
 }
 
 export default async function Home({ searchParams }: PageProps<"/">) {
+  const params = await searchParams;
+  const aba = parseAba(typeof params.aba === "string" ? params.aba : undefined);
+  if (aba && !(await getUsuario())) redirect(`/entrar?voltar=${encodeURIComponent(`/?aba=${aba}`)}`);
+
   const regions = await getRegions();
   const filters = parseFilters(
-    await searchParams,
+    params,
     regions.map((r) => r.code),
   );
+
+  if (aba) {
+    return (
+      <main className="flex flex-1 flex-col px-4 pb-8 pt-36 sm:px-12 md:pt-28">
+        <ListaView aba={aba} pais={filters.pais} />
+      </main>
+    );
+  }
+
   const [providers, genres, initial, marcas] = await Promise.all([
     getProviders(filters.pais),
     getGenres(),
