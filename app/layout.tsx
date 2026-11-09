@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bebas_Neue, Figtree } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
+import { getUsuario } from "@/lib/supabase/auth";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -20,11 +21,12 @@ export const metadata: Metadata = {
   description: "Descubra quais filmes estão disponíveis nos streamings agora.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const usuario = await getUsuario();
   return (
     <html lang="pt-BR" className={`${figtree.variable} ${bebas.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <SiteHeader />
+        <SiteHeader usuario={usuario && { email: usuario.email }} />
         {children}
         <Footer />
       </body>
