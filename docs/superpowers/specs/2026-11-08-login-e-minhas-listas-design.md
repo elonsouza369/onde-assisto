@@ -78,7 +78,7 @@ O script fica em `supabase/migrations/20261108000000_lista_filmes.sql` (versiona
 ### Voltar para onde estava
 - Parâmetros de `/entrar`: `voltar` (caminho de origem), `filme` (id) e `marcar` (`quero` | `assistido`).
 - Depois de entrar ou criar conta: se `filme` e `marcar` forem válidos, grava a marcação; então redireciona para `voltar`.
-- `voltar` só é aceito se for caminho interno: começa com `/`, não começa com `//` nem `/\`, sem esquema. Caso contrário, usa `/`. Função pura `caminhoSeguro()` em `lib/redirect.ts`.
+- `voltar` só é aceito se for caminho interno: começa com `/`, não tem caracteres de controle nem `\`, e, interpretado pelo parser de URL, continua na mesma origem. Caso contrário, usa `/`. Função pura `caminhoSeguro()` em `lib/redirect.ts`.
 
 ## 4. Listas
 
