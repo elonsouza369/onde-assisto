@@ -10,3 +10,15 @@ it.each(["//evil.com", "/\\evil.com", "https://evil.com", "javascript:alert(1)",
     expect(caminhoSeguro(v)).toBe("/");
   },
 );
+
+// O parser de URL do navegador descarta tab e quebra de linha: "/\t/evil.com" vira "//evil.com".
+it.each(["/\t/evil.com", "/\n/evil.com", "/\r/evil.com", "/\t\\evil.com", "/a\\b"])(
+  "caminhoSeguro recusa caracteres de controle e barra invertida (%j)",
+  (v) => {
+    expect(caminhoSeguro(v)).toBe("/");
+  },
+);
+
+it("caminhoSeguro preserva busca e âncora", () => {
+  expect(caminhoSeguro("/?aba=assistidos&pais=US#topo")).toBe("/?aba=assistidos&pais=US#topo");
+});

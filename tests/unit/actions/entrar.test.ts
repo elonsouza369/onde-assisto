@@ -79,6 +79,11 @@ describe.each([
     expect(redirect).toHaveBeenCalledWith("/");
   });
 
+  it("voltar com tabulação escondida vai para /", async () => {
+    await expect(acao({}, form({ voltar: "/\t/evil.com" }))).rejects.toThrow("NEXT_REDIRECT");
+    expect(redirect).toHaveBeenCalledWith("/");
+  });
+
   it("sem Supabase mostra erro de conexão", async () => {
     createMock.mockResolvedValue(null);
     expect(await acao({}, form({}))).toEqual({ erro: conexao, email: "ana@x.com" });
