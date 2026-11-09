@@ -1,5 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Disponibiliza SUPABASE_URL etc. para decidir se o teste das listas roda.
+try {
+  process.loadEnvFile(".env.local");
+} catch {}
+
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: 60_000,
