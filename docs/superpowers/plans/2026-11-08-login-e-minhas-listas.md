@@ -22,6 +22,7 @@
 - Textos fixos (pt-BR, exatamente assim):
   - Login: abas "Entrar" / "Criar conta"; campos "E-mail" / "Senha"; botões "Entrar" / "Criar conta".
   - Erros de login: "E-mail ou senha incorretos." · "Já existe uma conta com esse e-mail. Entre com sua senha." · "A senha precisa ter pelo menos 6 caracteres." · "Digite um e-mail válido." · "Não foi possível conectar agora. Tente de novo em instantes."
+  - Cadastro sem sessão (confirmação de e-mail ainda ligada): "Conta criada. Confirme seu e-mail para entrar."
   - Marcar: "+ Quero assistir" · "✓ Já assisti" · erro "Não foi possível salvar. Tente de novo."
   - Cabeçalho: "Entrar" · abas "Catálogo" / "Quero assistir" / "Já assistidos" · "Sair".
   - Selos (texto acessível): "Na sua lista Quero assistir" · "Você já assistiu".
