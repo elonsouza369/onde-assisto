@@ -1,9 +1,32 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Marca } from "@/lib/marcas";
 import type { Movie } from "@/lib/tmdb/types";
 import { formatRating } from "./HeroParts";
 
-export function MovieCard({ movie, pais }: { movie: Movie; pais: string }) {
+const SELOS: Record<Marca, string> = {
+  quero: "Na sua lista Quero assistir",
+  assistido: "Você já assistiu",
+};
+
+function Selo({ marca }: { marca: Marca }) {
+  return (
+    <span className="absolute bottom-1.5 right-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/80 shadow-[0_2px_8px_rgba(0,0,0,0.6)] ring-1 ring-white/20">
+      {marca === "quero" ? (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-white">
+          <path d="M6 3h12v18l-6-4.5L6 21z" />
+        </svg>
+      ) : (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-match stroke-[3]">
+          <path d="m5 12.5 4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+      <span className="sr-only">{SELOS[marca]}</span>
+    </span>
+  );
+}
+
+export function MovieCard({ movie, pais, marca }: { movie: Movie; pais: string; marca?: Marca }) {
   return (
     <Link href={`/filme/${movie.id}?pais=${pais}`} className="group block focus-visible:outline-none">
       <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-surface ring-white transition duration-300 ease-out group-hover:scale-[1.03] group-hover:ring-[3px] group-focus-visible:scale-[1.03] group-focus-visible:ring-[3px]">
@@ -37,6 +60,7 @@ export function MovieCard({ movie, pais }: { movie: Movie; pais: string }) {
             )}
           </span>
         )}
+        {marca && <Selo marca={marca} />}
       </div>
       <h3 className="mt-2.5 line-clamp-2 text-sm font-semibold leading-snug text-white/90 group-hover:text-white">
         {movie.title}

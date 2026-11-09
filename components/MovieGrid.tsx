@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { filtersToSearchParams, type Filters } from "@/lib/filters";
+import { useState, type ReactNode } from "react";
+import type { Marca } from "@/lib/marcas";
 import type { Movie, MoviePage } from "@/lib/tmdb/types";
 import { EmptyState } from "./EmptyState";
 import { ErrorState } from "./ErrorState";
@@ -15,7 +15,16 @@ function mergeUnique(current: Movie[], next: Movie[]): Movie[] {
   return [...current, ...next.filter((m) => !seen.has(m.id))];
 }
 
-export function MovieGrid({ initial, filters }: { initial: MoviePage; filters: Filters }) {
+type Props = {
+  initial: MoviePage;
+  /** URL do "Carregar mais"; a página é acrescentada como `pagina=N`. */
+  endpoint: string;
+  pais: string;
+  marcas: Record<number, Marca>;
+  empty?: ReactNode;
+};
+
+export function MovieGrid({ initial, endpoint, pais, marcas, empty }: Props) {
   const [movies, setMovies] = useState(initial.movies);
   const [page, setPage] = useState(initial.page);
   const [totalPages, setTotalPages] = useState(initial.totalPages);
@@ -26,8 +35,7 @@ export function MovieGrid({ initial, filters }: { initial: MoviePage; filters: F
     setLoading(true);
     setFailed(false);
     try {
-      const params = filtersToSearchParams(filters, { pagina: page + 1 });
-      const response = await fetch(`/api/movies?${params}`);
+      const response = await fetch(`${endpoint}${endpoint.includes("?") ? "&" : "?"}pagina=${page + 1}`);
       if (!response.ok) throw new Error(`status ${response.status}`);
       const next: MoviePage = await response.json();
       setMovies((current) => mergeUnique(current, next.movies));
@@ -40,13 +48,13 @@ export function MovieGrid({ initial, filters }: { initial: MoviePage; filters: F
     }
   }
 
-  if (initial.movies.length === 0 && initial.page >= initial.totalPages) return <EmptyState pais={filters.pais} />;
+  if (initial.movies.length === 0 && initial.page >= initial.totalPages) return empty ?? <EmptyState pais={pais} />;
 
   return (
     <div>
       <div className={GRID_CLASSES}>
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} pais={filters.pais} />
+          <MovieCard key={movie.id} movie={movie} pais={pais} marca={marcas[movie.id]} />
         ))}
       </div>
       {failed ? (

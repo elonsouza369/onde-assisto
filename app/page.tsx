@@ -51,7 +51,13 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </div>
         <section className="flex flex-col gap-4">
           <h2 className="text-xl font-bold sm:text-2xl">{rowTitle(filters)}</h2>
-          <MovieGrid key={filtersToSearchParams(filters).toString()} initial={initial} filters={filters} />
+          <MovieGrid
+            key={filtersToSearchParams(filters).toString()}
+            initial={initial}
+            endpoint={`/api/movies?${filtersToSearchParams(filters)}`}
+            pais={filters.pais}
+            marcas={marcas}
+          />
         </section>
       </div>
     </main>
